@@ -1,6 +1,6 @@
 {
-  "title": "Gateway de Pagamentos - API Quarkus",
-  "uid": "quarkus-api-detail",
+  "title": "Gateway de Pagamentos - API Python",
+  "uid": "payment-api-detail",
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
@@ -13,7 +13,7 @@
       "id": 1, "type": "timeseries", "title": "Throughput (req/s)",
       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 1 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "sum(rate(http_server_requests_seconds_count[1m]))", "legendFormat": "req/s" }]
+      "targets": [{ "expr": "sum(rate(payment_requests_total[1m]))", "legendFormat": "req/s" }]
     },
     {
       "id": 2, "type": "timeseries", "title": "Taxa de Erro 5xx (%)",
@@ -23,7 +23,7 @@
         { "color": "green", "value": null }, { "color": "red", "value": 5 }
       ] } }, "overrides": [] },
       "targets": [{
-        "expr": "(sum(rate(http_server_requests_seconds_count{status=~\"5..\"}[1m])) / sum(rate(http_server_requests_seconds_count[1m]))) * 100",
+        "expr": "(sum(rate(payment_requests_total{status=~\"5..\"}[1m])) / sum(rate(payment_requests_total[1m]))) * 100",
         "legendFormat": "erro 5xx"
       }]
     },
@@ -31,7 +31,7 @@
       "id": 3, "type": "timeseries", "title": "Contagem por Status",
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 1 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "sum by(status) (rate(http_server_requests_seconds_count[1m]))", "legendFormat": "{{status}}" }]
+      "targets": [{ "expr": "sum by(status) (rate(payment_requests_total[1m]))", "legendFormat": "{{status}}" }]
     },
     {
       "id": 4, "type": "timeseries", "title": "Latência Média",
@@ -39,47 +39,29 @@
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
       "targets": [{
-        "expr": "rate(http_server_requests_seconds_sum[1m]) / rate(http_server_requests_seconds_count[1m])",
+        "expr": "rate(payment_latency_seconds_sum[1m]) / rate(payment_latency_seconds_count[1m])",
         "legendFormat": "latência média"
       }]
     },
     {
-      "id": 5, "type": "timeseries", "title": "Latência Máxima Observada",
+      "id": 5, "type": "timeseries", "title": "Latência (p50, p95, p99)",
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 9 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-      "targets": [{ "expr": "http_server_requests_seconds_max", "legendFormat": "{{uri}}" }]
+      "targets": [
+        { "expr": "histogram_quantile(0.50, sum(rate(payment_latency_seconds_bucket[1m])) by (le))", "legendFormat": "p50" },
+        { "expr": "histogram_quantile(0.95, sum(rate(payment_latency_seconds_bucket[1m])) by (le))", "legendFormat": "p95" },
+        { "expr": "histogram_quantile(0.99, sum(rate(payment_latency_seconds_bucket[1m])) by (le))", "legendFormat": "p99" }
+      ]
     },
 
-    { "type": "row", "title": "JVM", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 101 },
+    { "type": "row", "title": "Logs (Loki)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 101 },
     {
-      "id": 10, "type": "timeseries", "title": "Heap Utilizado",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 18 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
-      "targets": [{ "expr": "jvm_memory_used_bytes{area=\"heap\"}", "legendFormat": "{{id}}" }]
-    },
-    {
-      "id": 11, "type": "timeseries", "title": "Threads Ativas",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 18 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "targets": [{ "expr": "jvm_threads_live_threads", "legendFormat": "threads" }]
-    },
-    {
-      "id": 12, "type": "timeseries", "title": "Pausas de GC",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 18 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
-      "targets": [{ "expr": "rate(jvm_gc_pause_seconds_sum[5m])", "legendFormat": "{{action}}" }]
-    },
-
-    { "type": "row", "title": "Logs (Loki)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 26 }, "id": 102 },
-    {
-      "id": 20, "type": "logs", "title": "Logs staging_quarkus (correlação com picos)",
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 27 },
+      "id": 20, "type": "logs", "title": "Logs staging_payment_api (correlação com picos)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 18 },
       "datasource": { "type": "loki", "uid": "loki" },
       "options": { "showTime": true, "wrapLogMessage": true },
-      "targets": [{ "expr": "{container=\"staging_quarkus\"}" }]
+      "targets": [{ "expr": "{container=\"staging_payment_api\"}" }]
     }
   ]
 }

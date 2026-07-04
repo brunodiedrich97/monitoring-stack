@@ -3,5 +3,12 @@ docs/
 # Não subir pasta target/
 app-stack/quarkus-api/target
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
 # Não subir configurações da IDE
 .idea

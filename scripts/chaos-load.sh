@@ -13,7 +13,7 @@ echo -e "\n${GREEN}[2/3] Simulando Sobrecarga de CPU por 45 segundos...${NC}"
 stress --cpu 2 --timeout 45s &
 
 echo -e "\n${GREEN}[3/3] Iniciando Ataque de Requisicoes Simultaneas (HTTP)...${NC}"
-ab -n 5000 -c 50 http://${TARGET_IP}:8080/q/metrics
+ab -n 5000 -c 50 http://${TARGET_IP}:8080/metrics
 
 echo -e "\n${GREEN}[BONUS] Simulando Varredura Maliciosa (Anomalia de Seguranca)...${NC}"
 for i in {1..50}

@@ -23,14 +23,14 @@ groups:
 
   - name: application_alerts
     rules:
-      - alert: QuarkusHighHttp5xxRate
-        expr: sum(rate(http_server_requests_seconds_count{status=~"5.."}[2m])) by (uri) / sum(rate(http_server_requests_seconds_count[2m])) by (uri) * 100 > 5
+      - alert: HighHttp5xxRate
+        expr: sum(rate(payment_requests_total{status=~"5.."}[2m])) / sum(rate(payment_requests_total[2m])) * 100 > 5
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Erros 5xx na rota {{ $labels.uri }}"
-          description: "Mais de 5% das chamadas na rota resultaram em falha do servidor."
+          summary: "Erros 5xx na API de Pagamentos"
+          description: "Mais de 5% das chamadas resultaram em falha do servidor."
           runbook_url: "https://github.com/runbooks/apps/http-5xx.md"
 
   - name: security_alerts

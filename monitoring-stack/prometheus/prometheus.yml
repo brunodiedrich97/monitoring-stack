@@ -19,10 +19,10 @@ scrape_configs:
     static_configs:
       - targets: ['staging_nginx_exporter:9113']
 
-  - job_name: 'quarkus-app'
-    metrics_path: '/q/metrics'
+  - job_name: 'payment-api'
+    metrics_path: '/metrics'
     static_configs:
-      - targets: ['staging_quarkus:8080']
+      - targets: ['staging_payment_api:8080']
 
   - job_name: 'postgresql'
     static_configs:
