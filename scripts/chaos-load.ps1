@@ -1,4 +1,3 @@
-# Requer PowerShell 7+ (ForEach-Object -Parallel)
 $TARGET_IP = "localhost"
 $url = "http://${TARGET_IP}:8080/metrics"
 
@@ -9,11 +8,19 @@ $cpuJob = Start-Job -ScriptBlock {
 }
 
 Write-Host "[2/3] Iniciando Ataque de Requisicoes Simultaneas (HTTP)..." -ForegroundColor Green
-1..5000 | ForEach-Object -Parallel {
-    try {
-        Invoke-WebRequest -Uri $using:url -UseBasicParsing -TimeoutSec 10 | Out-Null
-    } catch {}
-} -ThrottleLimit 50
+$jobs = @()
+$concurrency = 50
+$batchSize = 100
+for ($i = 0; $i -lt $concurrency; $i++) {
+    $jobs += Start-Job -ScriptBlock {
+        param($u, $n)
+        for ($j = 0; $j -lt $n; $j++) {
+            try { Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 10 | Out-Null } catch {}
+        }
+    } -ArgumentList $url, $batchSize
+}
+$jobs | Wait-Job -Timeout 120 | Out-Null
+$jobs | Remove-Job -Force
 
 Write-Host "[BONUS] Simulando Varredura Maliciosa (Anomalia de Seguranca)..." -ForegroundColor Green
 1..50 | ForEach-Object {
