@@ -6,7 +6,7 @@ Este projeto apresenta a implementação prática de uma solução robusta de **
 
 A infraestrutura roda em um único host Docker com redes isoladas, simulando um ambiente completo de monitoramento.
 
-![Alt Text](./images/fluxo_operacional.jpeg)
+![Alt Text](./images/fluxo-operacional.jpeg)
 
 1. **Camada de Alvos (Data Sources):** O Nginx atua como proxy, direcionando chamadas para a API Quarkus que se comunica com o PostgreSQL. Cada componente possui um agente dedicado de coleta de métricas e geração de logs.
 2. **Coleta e Ingestão (Scrape):** O Prometheus realiza buscas ativas (*scrape*) periódicas nos exporters através da rede interna. O Promtail monitora os arquivos de log locais e os envia continuamente para o Loki.
