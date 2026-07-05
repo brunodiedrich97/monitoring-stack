@@ -91,6 +91,7 @@ async def process_payment(request: PaymentRequest):
 
 @app.get("/api/payments")
 async def get_all():
+    REQUESTS_TOTAL.labels(status="200").inc()
     async with async_session() as session:
         result = await session.execute(select(PaymentTransaction))
         txs = result.scalars().all()

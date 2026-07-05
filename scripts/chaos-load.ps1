@@ -1,5 +1,6 @@
 $TARGET_IP = "localhost"
-$url = "http://${TARGET_IP}:8080/metrics"
+$url = "http://${TARGET_IP}:8080/api/payments"
+$body = '{"amount": 150.0}'
 
 Write-Host "[1/3] Simulando Sobrecarga de CPU por 45 segundos..." -ForegroundColor Green
 $cpuJob = Start-Job -ScriptBlock {
@@ -7,17 +8,19 @@ $cpuJob = Start-Job -ScriptBlock {
     while ((Get-Date) -lt $end) { }
 }
 
-Write-Host "[2/3] Iniciando Ataque de Requisicoes Simultaneas (HTTP)..." -ForegroundColor Green
+Write-Host "[2/3] Iniciando Ataque de Requisicoes Simultaneas (HTTP) na API de Pagamentos..." -ForegroundColor Green
 $jobs = @()
 $concurrency = 50
 $batchSize = 100
 for ($i = 0; $i -lt $concurrency; $i++) {
     $jobs += Start-Job -ScriptBlock {
-        param($u, $n)
+        param($u, $b, $n)
         for ($j = 0; $j -lt $n; $j++) {
-            try { Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 10 | Out-Null } catch {}
+            try {
+                Invoke-WebRequest -Uri $u -Method Post -Body $b -ContentType "application/json" -UseBasicParsing -TimeoutSec 10 | Out-Null
+            } catch {}
         }
-    } -ArgumentList $url, $batchSize
+    } -ArgumentList $url, $body, $batchSize
 }
 $jobs | Wait-Job -Timeout 120 | Out-Null
 $jobs | Remove-Job -Force

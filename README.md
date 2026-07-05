@@ -48,6 +48,8 @@ chmod +x ./scripts/chaos-load.sh
 ./scripts/chaos-load.sh
 ```
 
+> No macOS, `ab` já vem instalado. Para estresse de CPU, instale o `stress`: `brew install stress` (opcional).
+
 **Windows (PowerShell 5+):**
 ```powershell
 # 1. Abrir PowerShell como administrador
@@ -87,4 +89,4 @@ Esse script simulará alta carga de processamento de hardware, requisições mas
 | **InstanceDown** | Alvo de scrape indisponível por mais de 1 minuto | critical |
 | **HostHighCpuLoad** | CPU acima de 85% por mais de 2 minutos | warning |
 | **HighHttp5xxRate** | Mais de 5% de erros 5xx em 1 minuto | critical |
-| **PotentialBruteForceOrScan** | Mais de 20 requisições 4xx/s detectadas | warning |
+| **HighRequestRate** | Mais de 200 req/s no Nginx | warning |
