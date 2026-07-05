@@ -1,6 +1,6 @@
 {
   "title": "Gateway de Pagamentos - API Python",
-  "uid": "payment-api-detail",
+  "uid": "quarkus-api-detail",
   "timezone": "browser",
   "schemaVersion": 39,
   "version": 1,
@@ -57,11 +57,11 @@
 
     { "type": "row", "title": "Logs (Loki)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 101 },
     {
-      "id": 20, "type": "logs", "title": "Logs staging_payment_api (correlação com picos)",
+      "id": 20, "type": "logs",       "title": "Logs dos Contêineres (correlação com picos)",
       "gridPos": { "h": 10, "w": 24, "x": 0, "y": 18 },
       "datasource": { "type": "loki", "uid": "loki" },
       "options": { "showTime": true, "wrapLogMessage": true },
-      "targets": [{ "expr": "{container=\"staging_payment_api\"}" }]
+      "targets": [{ "expr": "{job=\"docker-logs\"}" }]
     }
   ]
 }
