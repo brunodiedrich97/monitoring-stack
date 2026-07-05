@@ -13,13 +13,13 @@ if ! command -v ab &> /dev/null; then
     fi
 fi
 
-echo -e "\n${GREEN}[2/3] Simulando Sobrecarga de CPU por 3 minutos...${NC}"
+echo -e "\n${GREEN}[2/3] Simulando Sobrecarga de CPU por 5 minutos...${NC}"
 docker run -d --rm --name staging_cpu_stress alpine sh -c '
   CPUS=$(nproc)
   for i in $(seq 1 $CPUS); do
     while :; do :; done &
   done
-  sleep 180
+  sleep 300
 ' > /dev/null
 echo "Estresse de CPU rodando no Docker (container: staging_cpu_stress)"
 

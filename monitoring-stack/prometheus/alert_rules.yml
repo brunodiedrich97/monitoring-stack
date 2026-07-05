@@ -12,8 +12,8 @@ groups:
           runbook_url: "https://github.com/runbooks/infra/instance-down.md"
 
       - alert: HostHighCpuLoad
-        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 85
-        for: 1m
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100) > 85
+        for: 30s
         labels:
           severity: warning
         annotations:
@@ -24,7 +24,7 @@ groups:
   - name: application_alerts
     rules:
       - alert: HighHttp5xxRate
-        expr: sum(rate(payment_requests_total{status=~"5.."}[2m])) / sum(rate(payment_requests_total[2m])) * 100 > 5
+        expr: sum by(instance) (rate(payment_requests_total{status=~"5.."}[2m])) / sum by(instance) (rate(payment_requests_total[2m])) * 100 > 5
         for: 30s
         labels:
           severity: critical
