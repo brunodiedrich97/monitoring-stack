@@ -48,19 +48,13 @@ chmod +x ./scripts/chaos-load.sh
 ./scripts/chaos-load.sh
 ```
 
-> No macOS, `ab` já vem instalado. Para estresse de CPU, instale o `stress`: `brew install stress` (opcional).
-
 **Windows (PowerShell 5+):**
 ```powershell
-# 1. Abrir PowerShell como administrador
-# 2. Se for a primeira vez, liberar execução de scripts:
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass # (A) SIM PARA TODOS
-
-# 3. Executar
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\scripts\chaos-load.ps1
 ```
 
-> Nota: No Windows, o script PowerShell usa `Start-Job` para concorrência em vez de `stress` e `ab` (indisponíveis nativamente), gerando carga equivalente via `Invoke-WebRequest` paralelo.
+O script usa Docker para estresse de CPU (3 rodadas de 2000 requisições POST à API de pagamentos).
 
 Esse script simulará alta carga de processamento de hardware, requisições massivas na API e varreduras maliciosas no proxy de borda, forçando o disparo de notificações no Slack e flutuações nos gráficos do Grafana.
 
@@ -87,6 +81,6 @@ Esse script simulará alta carga de processamento de hardware, requisições mas
 | Alerta | Descrição | Gravidade |
 |---|---|---|
 | **InstanceDown** | Alvo de scrape indisponível por mais de 1 minuto | critical |
-| **HostHighCpuLoad** | CPU acima de 85% por mais de 2 minutos | warning |
-| **HighHttp5xxRate** | Mais de 5% de erros 5xx em 1 minuto | critical |
-| **HighRequestRate** | Mais de 200 req/s no Nginx | warning |
+| **HostHighCpuLoad** | CPU acima de 85% por mais de 30 segundos | warning |
+| **HighHttp5xxRate** | Mais de 5% de erros 5xx em 30 segundos | critical |
+| **HighRequestRate** | Mais de 100 req/s no Nginx | warning |
