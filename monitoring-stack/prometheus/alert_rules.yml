@@ -42,5 +42,5 @@ groups:
           severity: warning
         annotations:
           summary: "Alto volume de requisições no Nginx"
-          description: "Mais de 200 req/s detectadas no Nginx. Possível Scan ou Brute Force."
+          description: "Mais de 100 req/s detectadas no Nginx. Possível Scan ou Brute Force."
           runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/tree/main/runbooks/high-rate.md"
