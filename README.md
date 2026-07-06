@@ -20,6 +20,17 @@ A infraestrutura roda em um único host Docker com redes isoladas, simulando um 
 
 - **Docker** e **Docker Compose** rodando.
 
+### Configuração Inicial: Variáveis de Ambiente
+
+Antes de subir a stack, configure o arquivo `.env` na raiz do projeto com a URL do webhook do Slack:
+
+```bash
+cp .env.example .env
+# Edite .env com a URL real do webhook do Slack
+```
+
+Sem essa configuração, o Alertmanager iniciará, mas as notificações no Slack não funcionarão.
+
 ### Passo 1: Subir a Stack Completa
 
 Na raiz do projeto, inicie a orquestração:
@@ -28,7 +39,7 @@ Na raiz do projeto, inicie a orquestração:
 docker compose up --build -d
 ```
 
-Verifique se todos os contêineres iniciaram corretamente com `docker ps`. Você deverá ver 12 serviços em execução.
+Verifique se todos os contêineres iniciaram corretamente com `docker ps`. Você deverá ver 11 serviços em execução.
 
 ### Passo 3: Validação Rápida (Smoke Test)
 
