@@ -124,8 +124,12 @@ services:
   alertmanager:
     image: prom/alertmanager:v0.25.0
     container_name: staging_alertmanager
+    environment:
+      SLACK_WEBHOOK_URL: "${SLACK_WEBHOOK_URL}"
     volumes:
-      - ./monitoring-stack/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./monitoring-stack/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.tpl
+      - ./monitoring-stack/alertmanager/entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
     ports:
       - "9093:9093"
     networks:

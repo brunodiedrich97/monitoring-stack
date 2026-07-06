@@ -12,3 +12,6 @@ venv/
 
 # Não subir configurações da IDE
 .idea
+
+# Environment variables (contain secrets)
+.env
