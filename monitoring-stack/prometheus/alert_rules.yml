@@ -9,7 +9,7 @@ groups:
         annotations:
           summary: "Instancia {{ $labels.instance }} fora do ar!"
           description: "Scrape falhando por mais de 1 minuto na instancia."
-          runbook_url: "https://github.com/runbooks/infra/instance-down.md"
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/runbooks/instance-down.md"
 
       - alert: HostHighCpuLoad
         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[1m])) * 100) > 85
@@ -19,7 +19,7 @@ groups:
         annotations:
           summary: "Uso de CPU elevado em {{ $labels.instance }}"
           description: "Consumo de CPU atingiu {{ printf \"%.2f\" $value }}%."
-          runbook_url: "https://github.com/runbooks/infra/high-cpu.md"
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/runbooks/high-cpu.md"
 
   - name: application_alerts
     rules:
@@ -31,7 +31,7 @@ groups:
         annotations:
           summary: "Erros 5xx na API de Pagamentos"
           description: "Mais de 5% das chamadas resultaram em falha do servidor."
-          runbook_url: "https://github.com/runbooks/apps/http-5xx.md"
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/runbooks/http-5xx.md"
 
   - name: security_alerts
     rules:
@@ -43,4 +43,4 @@ groups:
         annotations:
           summary: "Alto volume de requisições no Nginx"
           description: "Mais de 200 req/s detectadas no Nginx. Possível Scan ou Brute Force."
-          runbook_url: "https://github.com/runbooks/security/high-rate.md"
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/runbooks/high-rate.md"
