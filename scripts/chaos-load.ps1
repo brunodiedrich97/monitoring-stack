@@ -14,9 +14,9 @@ try {
 
 Write-Host "$(timestamp) [2/4] Ataque de Requisicoes via Nginx (porta 80) — 3 rodadas..." -ForegroundColor Green
 for ($rodada = 1; $rodada -le 3; $rodada++) {
-    Write-Host "$(timestamp) Rodada $rodada/3 — 2000 requisições..." -ForegroundColor Yellow
+    Write-Host "$(timestamp) Rodada $rodada/3 — 10000 requisições..." -ForegroundColor Yellow
     $jobs = @()
-    for ($i = 0; $i -lt 50; $i++) {
+    for ($i = 0; $i -lt 100; $i++) {
         $jobs += Start-Job -ScriptBlock {
             param($u, $b, $n)
             for ($j = 0; $j -lt $n; $j++) {
@@ -24,23 +24,23 @@ for ($rodada = 1; $rodada -le 3; $rodada++) {
                     Invoke-WebRequest -Uri $u -Method Post -Body $b -ContentType "application/json" -UseBasicParsing -TimeoutSec 10 | Out-Null
                 } catch {}
             }
-        } -ArgumentList $url, $body, 40
+        } -ArgumentList $url, $body, 100
     }
     $jobs | Wait-Job -Timeout 60 | Out-Null
     $jobs | Remove-Job -Force
-    Write-Host "$(timestamp) Rodada $rodada concluída, aguardando 30s..." -ForegroundColor Yellow
+    Write-Host "$(timestamp) Rodada $rodada concluída, aguardando 5s..." -ForegroundColor Yellow
     if ($rodada -lt 3) {
-        Start-Sleep -Seconds 30
+        Start-Sleep -Seconds 5
     }
 }
 
-Write-Host "$(timestamp) [3/4] Varredura Maliciosa — 1500 requisicoes a rotas invalidas..." -ForegroundColor Green
+Write-Host "$(timestamp) [3/4] Varredura Maliciosa — 3000 requisicoes a rotas invalidas..." -ForegroundColor Green
 $scanUrl = "http://${TARGET_IP}:80/rota-ataque"
 $scanJobs = @()
 1..30 | ForEach-Object {
     $scanJobs += Start-Job -ScriptBlock {
         param($u)
-        for ($r = 0; $r -lt 50; $r++) {
+        for ($r = 0; $r -lt 100; $r++) {
             try {
                 Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 5 | Out-Null
             } catch {}
@@ -49,7 +49,7 @@ $scanJobs = @()
 }
 $scanJobs | Wait-Job -Timeout 30 | Out-Null
 $scanJobs | Remove-Job -Force
-Write-Host "$(timestamp) Varredura concluída (1500 reqs para rota inválida)." -ForegroundColor Yellow
+Write-Host "$(timestamp) Varredura concluída (3000 reqs para rota inválida)." -ForegroundColor Yellow
 
 docker rm -f staging_cpu_stress 2>$null
 

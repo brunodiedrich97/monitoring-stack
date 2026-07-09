@@ -33,21 +33,21 @@ echo -e "\n${GREEN}[3/4] $(timestamp) Ataque de Requisicoes via Nginx (porta 80)
 echo '{"amount": 150.0}' > /tmp/payment-data.json
 
 for rodada in 1 2 3; do
-    echo -e "${YELLOW}$(timestamp) Rodada $rodada/3 — 2000 requisições via Nginx...${NC}"
-    ab -n 2000 -c 20 -p /tmp/payment-data.json -T application/json http://${TARGET_IP}:80/api/payments 2>&1 | tail -3
-    echo -e "${YELLOW}$(timestamp) Rodada $rodada concluída, aguardando 30s...${NC}"
-    sleep 30
+    echo -e "${YELLOW}$(timestamp) Rodada $rodada/3 — 10000 requisições via Nginx...${NC}"
+    ab -n 10000 -c 100 -p /tmp/payment-data.json -T application/json http://${TARGET_IP}:80/api/payments 2>&1 | tail -3
+    echo -e "${YELLOW}$(timestamp) Rodada $rodada concluída, aguardando 5s...${NC}"
+    sleep 5
 done
 
 rm -f /tmp/payment-data.json
 
-echo -e "\n${GREEN}[4/4] $(timestamp) Varredura Maliciosa — 1500 requisicoes a rotas invalidas...${NC}"
-echo -e "${YELLOW}$(timestamp) Disparando 3 lotes paralelos de 500 reqs para /rota-ataque...${NC}"
-ab -n 500 -c 50 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
-ab -n 500 -c 50 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
-ab -n 500 -c 50 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
+echo -e "\n${GREEN}[4/4] $(timestamp) Varredura Maliciosa — 3000 requisicoes a rotas invalidas...${NC}"
+echo -e "${YELLOW}$(timestamp) Disparando 3 lotes paralelos de 1000 reqs para /rota-ataque...${NC}"
+ab -n 1000 -c 100 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
+ab -n 1000 -c 100 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
+ab -n 1000 -c 100 http://${TARGET_IP}:80/rota-ataque > /dev/null 2>&1 &
 wait
-echo -e "${YELLOW}$(timestamp) Varredura concluída (1500 reqs para rota inválida).${NC}"
+echo -e "${YELLOW}$(timestamp) Varredura concluída (3000 reqs para rota inválida).${NC}"
 
 docker rm -f staging_cpu_stress 2>/dev/null
 
