@@ -105,21 +105,10 @@
       ]
     },
 
-    { "type": "row", "title": "Segurança", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 }, "id": 110 },
-    {
-      "id": 40, "type": "timeseries", "title": "Requisições Inválidas/s (Scanning)",
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 44 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "reqps", "thresholds": { "steps": [
-        { "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 10 }
-      ] } }, "overrides": [] },
-      "targets": [{ "expr": "rate(payment_invalid_requests_total[1m])", "legendFormat": "inválidas/s" }]
-    },
-
-    { "type": "row", "title": "Alertas Ativos", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 50 }, "id": 103 },
+    { "type": "row", "title": "Alertas Ativos", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 }, "id": 103 },
     {
       "id": 30, "type": "table", "title": "Alertas em FIRING",
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 51 },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 44 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "targets": [{ "expr": "ALERTS{alertstate=\"firing\"}", "format": "table", "instant": true }]
     }

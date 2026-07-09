@@ -57,7 +57,7 @@
 
     { "type": "row", "title": "Segurança (Eventos Anômalos)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 102 },
     {
-      "id": 30, "type": "timeseries", "title": "Requisições Inválidas (Scanning)",
+      "id": 30, "type": "timeseries", "title": "Scanning — Requisições Inválidas/s",
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 18 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "reqps", "thresholds": { "steps": [
