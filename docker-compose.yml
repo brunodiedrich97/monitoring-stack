@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: sua_senha
-      POSTGRES_DB: seu_banco
+      POSTGRES_DB: payment_db
     ports:
       - "5432:5432"
     healthcheck:
@@ -35,7 +35,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DATABASE_URL: "postgresql+asyncpg://postgres:sua_senha@staging_postgres:5432/seu_banco"
+      DATABASE_URL: "postgresql+asyncpg://postgres:sua_senha@staging_postgres:5432/payment_db"
     depends_on:
       postgres:
         condition: service_healthy
@@ -73,7 +73,7 @@ services:
     image: prometheuscommunity/postgres-exporter:v0.15.0
     container_name: staging_postgres_exporter
     environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:sua_senha@staging_postgres:5432/seu_banco?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://postgres:sua_senha@staging_postgres:5432/payment_db?sslmode=disable"
     depends_on:
       postgres:
         condition: service_healthy

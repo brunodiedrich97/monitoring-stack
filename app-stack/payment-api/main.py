@@ -14,7 +14,7 @@ from sqlalchemy import select
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://postgres:sua_senha@localhost:5432/seu_banco"
+    "postgresql+asyncpg://postgres:sua_senha@localhost:5432/payment_db"
 )
 
 engine = create_async_engine(DATABASE_URL, echo=False)

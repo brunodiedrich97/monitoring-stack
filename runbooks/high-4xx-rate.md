@@ -24,7 +24,7 @@ A taxa de erros 4xx na API de Pagamentos ultrapassou 15% nos últimos 30 segundo
 
 4. Verificar transações DECLINED no banco:
    ```bash
-   docker exec staging_postgres psql -U postgres -d seu_banco -c "SELECT count(*), status FROM payment_transactions GROUP BY status;"
+   docker exec staging_postgres psql -U postgres -d payment_db -c "SELECT count(*), status FROM payment_transactions GROUP BY status;"
    ```
 
 ## Resolução
