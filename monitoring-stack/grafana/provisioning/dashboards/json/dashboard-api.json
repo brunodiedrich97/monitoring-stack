@@ -55,13 +55,34 @@
       ]
     },
 
-    { "type": "row", "title": "Logs (Loki)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 101 },
+    { "type": "row", "title": "Segurança (Eventos Anômalos)", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 }, "id": 102 },
     {
-      "id": 20, "type": "logs",       "title": "Logs dos Contêineres (correlação com picos)",
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 18 },
+      "id": 30, "type": "timeseries", "title": "Requisições Inválidas (Scanning)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 18 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps", "thresholds": { "steps": [
+        { "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 10 }
+      ] } }, "overrides": [] },
+      "targets": [{ "expr": "rate(payment_invalid_requests_total[1m])", "legendFormat": "inválidas/s" }]
+    },
+    {
+      "id": 31, "type": "timeseries", "title": "Taxa de Erros 4xx (%)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percent", "thresholds": { "steps": [
+        { "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 15 }
+      ] } }, "overrides": [] },
+      "targets": [{
+        "expr": "(sum(rate(payment_requests_total{status=~\"4..\"}[1m])) / sum(rate(payment_requests_total[1m]))) * 100",
+        "legendFormat": "erro 4xx"
+      }]
+    },
+    {
+      "id": 32, "type": "logs", "title": "Logs de Segurança (4xx/5xx)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
       "datasource": { "type": "loki", "uid": "loki" },
       "options": { "showTime": true, "wrapLogMessage": true },
-      "targets": [{ "expr": "{job=\"docker-logs\"}" }]
+      "targets": [{ "expr": "{job=\"docker-logs\"} |= \"HTTP_404\" or {job=\"docker-logs\"} |= \"HTTP_500\" or {job=\"docker-logs\"} |= \"invalid_route\"" }]
     }
   ]
 }

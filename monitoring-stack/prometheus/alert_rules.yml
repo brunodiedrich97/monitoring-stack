@@ -44,3 +44,23 @@ groups:
           summary: "Alto volume de requisições no Nginx"
           description: "Mais de 100 req/s detectadas no Nginx. Possível Scan ou Brute Force."
           runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/tree/main/runbooks/high-rate.md"
+
+      - alert: HighInvalidRequestRate
+        expr: rate(payment_invalid_requests_total[1m]) > 10
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Possível varredura de rotas (scanning)"
+          description: "Mais de 10 requisições inválidas/s detectadas na API. Possível ataque de varredura."
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/tree/main/runbooks/high-invalid-rate.md"
+
+      - alert: High4xxRate
+        expr: sum by(instance) (rate(payment_requests_total{status=~"4.."}[2m])) / sum by(instance) (rate(payment_requests_total[2m])) * 100 > 15
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taxa elevada de erros 4xx na API de Pagamentos"
+          description: "Mais de 15% das requisições resultaram em erro 4xx. Possível tentativa de fraude ou abuso."
+          runbook_url: "https://github.com/brunodiedrich97/monitoring-stack/tree/main/runbooks/high-4xx-rate.md"

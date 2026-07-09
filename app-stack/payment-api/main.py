@@ -4,7 +4,7 @@ import asyncio
 import time
 from datetime import datetime
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from starlette.responses import Response
@@ -36,8 +36,17 @@ class PaymentTransaction(Base):
 
 REQUESTS_TOTAL = Counter("payment_requests_total", "Total payment requests", ["status"])
 LATENCY = Histogram("payment_latency_seconds", "Payment request latency", buckets=[.005, .01, .025, .05, .1, .25, .5, 1, 2.5])
+INVALID_REQUESTS_TOTAL = Counter("payment_invalid_requests_total", "Invalid/unknown route access attempts", ["path"])
 
 app = FastAPI(title="Payment Gateway API")
+
+
+@app.middleware("http")
+async def track_security_events(request: Request, call_next):
+    response = await call_next(request)
+    if response.status_code == 404 and request.url.path != "/metrics":
+        INVALID_REQUESTS_TOTAL.labels(path=request.url.path).inc()
+    return response
 
 
 class PaymentRequest(BaseModel):
