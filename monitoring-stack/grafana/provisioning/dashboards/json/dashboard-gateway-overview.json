@@ -108,7 +108,7 @@
     { "type": "row", "title": "Segurança", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 }, "id": 110 },
     {
       "id": 40, "type": "timeseries", "title": "Requisições Inválidas/s (Scanning)",
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 44 },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 44 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "unit": "reqps", "thresholds": { "steps": [
         { "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 10 }
@@ -116,17 +116,8 @@
       "targets": [{ "expr": "rate(payment_invalid_requests_total[1m])", "legendFormat": "inválidas/s" }]
     },
     {
-      "id": 41, "type": "timeseries", "title": "Requisições HTTP/s (Nginx)",
-      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 44 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "reqps", "thresholds": { "steps": [
-        { "color": "green", "value": null }, { "color": "yellow", "value": 80 }, { "color": "red", "value": 100 }
-      ] } }, "overrides": [] },
-      "targets": [{ "expr": "rate(nginx_http_requests_total[1m])", "legendFormat": "req/s" }]
-    },
-    {
-      "id": 42, "type": "stat", "title": "Alertas de Segurança em FIRING",
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 44 },
+      "id": 41, "type": "stat", "title": "Alertas de Segurança em FIRING",
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 44 },
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": { "defaults": { "mappings": [
         { "type": "value", "options": { "0": { "text": "Nenhum", "color": "green" } } }
