@@ -55,8 +55,18 @@ class PaymentRequest(BaseModel):
 
 @app.on_event("startup")
 async def startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    for attempt in range(10):
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            return
+        except Exception as e:
+            if attempt < 9:
+                print(f"DB connection failed (attempt {attempt + 1}/10): {e}. Retrying in 3s...")
+                await asyncio.sleep(3)
+            else:
+                print(f"DB connection failed after 10 attempts: {e}")
+                raise
 
 
 @app.get("/metrics")
